@@ -1,4 +1,4 @@
-# Bash Automation Tools
+# Smart Agriculture Automation# Bash Automation Tools
 
 Acest repository conține o colecție de scripturi Bash create pentru automatizarea sarcinilor de administrare sistem Linux.
 
