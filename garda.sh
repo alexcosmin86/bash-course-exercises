@@ -1,15 +1,19 @@
 #!/bin/bash
 
-# Folderul firmei tale de agricultură
-LOG_FILE="/home/alex/gemini/irigatii_afine.log"
+# Fișierul unde salvăm ce se întâmplă
+LOG="irigatii_afine.log"
 
-echo "$(date): Verificare automată sistem irigații..." >> $LOG_FILE
-
-# Simulăm o verificare: dacă sistemul de apă e pornit
-STARE_POMPA="activa"
-
-if [ "$STARE_POMPA" == "activa" ]; then
-    echo "$(date): Pompa funcționează. Afinele sunt udate." >> $LOG_FILE
+# Verificăm dacă Nginx rulează (is-active)
+if ! systemctl is-active --quiet nginx; then
+    echo "$(date): [ALARMĂ] Nginx era oprit! Încerc repornirea..." >> "$LOG"
+    sudo systemctl restart nginx
+    
+    # Verificăm dacă a reușit
+    if systemctl is-active --quiet nginx; then
+        echo "$(date): [OK] Nginx a fost repornit cu succes." >> "$LOG"
+    else
+        echo "$(date): [EROARE] Nginx tot nu vrea să pornească!" >> "$LOG"
+    fi
 else
-    echo "$(date): ALARMĂ! Pompa este oprită. Verifică sursa de curent!" >> $LOG_FILE
+    echo "Garda: Totul e în regulă, Nginx veghează afinele."
 fi
